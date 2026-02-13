@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neko Chan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-pink: #ff4d8d;
+            --soft-pink: #ffdde6;
+            --dark-pink: #cc0066;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            background: linear-gradient(135deg, #ffdde6 0%, #ffafbd 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            width: 100vw;
+    height: 100vh;
+    overflow: hidden !important; /* Forces the screen to stay still */
+        }
+
+        /* Floating Background Hearts */
+        .bg-heart {
+            position: fixed;
+            color: rgba(255, 77, 141, 0.2);
+            z-index: 1;
+            user-select: none;
+            pointer-events: none;
+            animation: floatBackground 10s infinite linear;
+        }
+
+        @keyframes floatBackground {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 100%;
+            border: 4px solid white;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Polaroid Image Styles */
+        .photo-frame {
+            transform: rotate(-2deg);
+            transition: transform 0.5s ease;
+            
+        }
+        .photo-frame img {
+            width: 100%;
+            max-height: 50vh; /* Responsive Height */
+            object-fit: cover;
+        }
+
+        .photo-frame1 img  {
+            width: 100%;
+            max-height: 60vh; /* Responsive Height */
+            object-fit: cover;
+        }
+
+        h1 {
+            color: var(--dark-pink);
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            font-family: 'Dancing Script', cursive;
+        }
+
+        h2 {
+            color: var(--dark-pink);
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
+
+        p {
+            color: #e40d6d;
+            line-height: 1.4;
+            font-size: 1.2rem;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .yes-btn {
+            background: var(--primary-pink);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 141, 0.3);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 15;
+        }
+
+        .no-btn {
+            background: #fff;
+            color: var(--primary-pink);
+            border: 2px solid var(--primary-pink);
+            z-index: 20;
+            margin: 0 !important;
+            transition: left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                top 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                transform 0.2s ease;
+    will-change: left, top; /* Optimizes performance for desktop browsers */
+        }
+
+        /* Music Controls */
+        .music-player {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .rounded-image {
+  border-radius: 20px; /* Adjust the value for the desired roundness */
+}
+
+
+        .music-btn {
+            background: var(--primary-pink);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            
+        }
+        
+
+        .music-text {
+            margin-right: 10px;
+            font-size: 0.7rem;
+            color: var(--dark-pink);
+            font-weight: bold;
+        }
+
+        .hidden { display: none !important; }
+        
+        #celebration {
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="music-player">
+        <span class="music-text">Play Our Song?</span>
+        <button class="music-btn" id="musicToggle">
+            <i class="fas fa-play" id="musicIcon"></i>
+        </button>
+        <audio id="bgMusic" loop>
+            <source src="./songs/Boys Like Girls - Two Is Better Than One.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <div class="main-card">
+        <div class="photo-frame1" id="mainPhoto">
+            <img class="rounded-image" src="./images/DollopCW_251226_210853_classic1_MFKMR165.gif" alt="Us">
+        </div>
+
+        <div id="contentSection">
+            <h1>BROTHER VP!!!!!</h1>
+            <br>
+            <p>I've been thinking a lot lately... and I have a very important question to ask you.</p>
+            <br>
+            <h2>Will you be my Valentine?</h2>
+            
+            <div class="btn-row">
+                <button class="btn yes-btn" id="yesBtn">YES DADDY ❤️</button>
+                <button class="btn no-btn" id="noBtn">No way</button>
+            </div>
+        </div>
+
+        <div id="celebration" class="hidden">
+            <h1>YAYYYY 😍</h1>
+            <p style="margin-bottom: 15px;">See you on 15 Feb!</p>
+            <div class="photo-frame">
+                <img class="rounded-image" src="/images/photo_1_2026-02-12_18-14-58.jpg" alt="Happy">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const musicBtn = document.getElementById('musicToggle');
+        const music = document.getElementById('bgMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        const contentSection = document.getElementById('contentSection');
+        const celebration = document.getElementById('celebration');
+        const mainPhoto = document.getElementById('mainPhoto');
+
+        let noCount = 0;
+
+        // 1. Music Logic
+        musicBtn.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                musicIcon.classList.replace('fa-play', 'fa-pause');
+                document.querySelector('.music-text').innerText = "Playing...";
+            } else {
+                music.pause();
+                musicIcon.classList.replace('fa-pause', 'fa-play');
+                document.querySelector('.music-text').innerText = "Play Our Song?";
+            }
+        });
+
+        // 2. Background Hearts
+        function createBackgroundHearts() {
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('bg-heart');
+                heart.innerHTML = '<i class="fas fa-heart"></i>';
+                heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = Math.random() * 100 + 'vh';
+                heart.style.animationDuration = Math.random() * 5 + 7 + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(heart);
+            }
+        }
+        createBackgroundHearts();
+
+let isInitialized = false;
+
+function moveButton() {
+    noCount++;
+
+    // 1. Initial State Capture: Lock to current position
+    if (!isInitialized) {
+        const rect = noBtn.getBoundingClientRect();
+        noBtn.style.position = 'fixed';
+        noBtn.style.left = rect.left + 'px';
+        noBtn.style.top = rect.top + 'px';
+        noBtn.style.margin = '0';
+        isInitialized = true;
+        setTimeout(moveButton, 20);
+        return;
+    }
+
+    // 2. Get the ACTUAL visible viewport (Precise for Desktop & Mobile)
+    const vv = window.visualViewport;
+    const vw = vv ? vv.width : window.innerWidth;
+    const vh = vv ? vv.height : window.innerHeight;
+
+    // 3. Define the Safe Zone
+    // We increase the right-side padding specifically to 80px 
+    const padLeft = 40;
+    const padRight = 80; 
+    const padTop = 40;
+    const padBottom = 40;
+
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+
+    // 4. Calculate Max Coordinates
+    const maxX = vw - btnWidth - padRight;
+    const maxY = vh - btnHeight - padBottom;
+
+    // 5. Generate and Clamp
+    // This ensures randomX is NEVER less than padLeft and NEVER more than maxX
+    let randomX = Math.floor(Math.random() * (maxX - padLeft + 1)) + padLeft;
+    let randomY = Math.floor(Math.random() * (maxY - padTop + 1)) + padTop;
+
+    // 6. Emergency Boundary Check (The "No-Fly" Zone)
+    if (randomX + btnWidth > vw) randomX = vw - btnWidth - padRight;
+    if (randomX < 0) randomX = padLeft;
+
+    // 7. Apply position with 'px'
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+
+    // Yes button growth logic
+    const newScale = 1 + (noCount * 0.15);
+    yesBtn.style.transform = `scale(${newScale})`;
+    
+    if (noCount === 3) yesBtn.innerText = "JUST CLICK ME! ❤️";
+    if (noCount === 6) yesBtn.innerText = "ARE YOU DONEE!! ❤️";
+    if (noCount === 10) yesBtn.innerText = "RESISTANCE IS FUTILE ❤️";
+}
+        noBtn.addEventListener('mouseover', moveButton);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
+
+        // 4. Success Logic
+        yesBtn.addEventListener('click', () => {
+            contentSection.classList.add('hidden');
+            mainPhoto.classList.add('hidden');
+            noBtn.classList.add('hidden');
+            celebration.classList.remove('hidden');
+            
+            for(let i=0; i<40; i++) {
+                createExplosionHeart();
+            }
+        });
+
+        function createExplosionHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            heart.style.zIndex = '2000';
+            heart.style.transition = 'transform 3s linear, opacity 3s';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.transform = `translateY(-120vh) rotate(${Math.random() * 360}deg)`;
+                heart.style.opacity = '0';
+            }, 100);
+            setTimeout(() => heart.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
